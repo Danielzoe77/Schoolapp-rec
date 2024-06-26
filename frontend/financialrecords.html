@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Records</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Financial Records</h1>
+        
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="className">Class:</label>
+                <input type="text" id="className" required>
+            </div>
+            <div class="form-group">
+                <label for="studentName">Name of Pupil:</label>
+                <input type="text" id="studentName" required>
+            </div>
+            <div class="form-group">
+                <label for="amountToBePaid">Total Amount to be Paid:</label>
+                <input type="number" id="amountToBePaid" required>
+            </div>
+            <div class="form-group">
+                <label for="amountDeposited">Amount Deposited:</label>
+                <input type="number" id="amountDeposited" required>
+            </div>
+            <button type="submit">Add Record</button><br>
+            <button><a href="login.html">Logout</a></button>
+        </form>
+        <h2>Records</h2>
+        <table id="recordsTable">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Name of Pupil</th>
+                    <th>Total Amount to be Paid</th>
+                    <th>Amount Deposited</th>
+                    <th>Balance</th>
+                    <th>Edit</th>
+      <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="recordstbody">
+                <!-- Records will be added here -->
+              </tbody>
+        </table>
+    </div>
+ <script src="finance.js"></script>
+</body>
+</html>
