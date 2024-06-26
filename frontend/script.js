@@ -89,7 +89,7 @@ password: formData.get('registerPassword'),
 // localStorage.setItem('admin', JSON.stringify(userData));
 // console.log(localStorage.getItem('admin'))
 
-fetch('http:/localhost:3000/api/users/register', {
+fetch('https://skulrecbackendcod.onrender.com/api/users/register', {
 method: 'POST',
 body: JSON.stringify(userData),
 headers: {
@@ -133,7 +133,7 @@ return;
 
 const userData = { email, password };
 
-fetch('http://localhost:3000/api/users/login', {
+fetch('https://skulrecbackendcod.onrender.com/api/users/login', {
 method: 'POST',
 body: JSON.stringify(userData),
 headers: { 'Content-Type': 'application/json' },

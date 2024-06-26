@@ -79,7 +79,7 @@ form.addEventListener('submit', (e) => {
   const amountDeposited = document.getElementById('amountDeposited').value;
   const balance = amountToBePaid - amountDeposited;
 
-  fetch('http://localhost:3000/api/records/add', {
+  fetch('https://skulrecbackendcod.onrender.com/api/records/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ className, studentName, amountToBePaid, amountDeposited, balance }),
