@@ -85,6 +85,7 @@ email: formData.get('registerEmail'),
 phone: formData.get('registerPhone'),
 password: formData.get('registerPassword'),
 };
+console.log(userData)
 
 // localStorage.setItem('admin', JSON.stringify(userData));
 // console.log(localStorage.getItem('admin'))
