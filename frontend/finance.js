@@ -1,94 +1,34 @@
-// const form = document.getElementById('paymentForm');
-// const tableBody = document.getElementById('recordstbody');
-
-// form.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const className = document.getElementById('className').value;
-//   const studentName = document.getElementById('studentName').value;
-//   const amountToBePaid = document.getElementById('amountToBePaid').value;
-//   const amountDeposited = document.getElementById('amountDeposited').value;
-//   const balance = amountToBePaid - amountDeposited;
-
-//   const tableRow = document.createElement('tr');
-//   const classTd = document.createElement('td');
-//   const nameTd = document.createElement('td');
-//   const amountToBePaidTd = document.createElement('td');
-//   const amountDepositedTd = document.createElement('td');
-//   const balanceTd = document.createElement('td');
-//   const editTd = document.createElement('td');
-//   const deleteTd = document.createElement('td');
-
-//   classTd.textContent = className;
-//   nameTd.textContent = studentName;
-//   amountToBePaidTd.textContent = amountToBePaid;
-//   amountDepositedTd.textContent = amountDeposited;
-//   balanceTd.textContent = balance;
-
-//   const editButton = document.createElement('button');
-//   editButton.textContent = 'Edit';
-//   editButton.addEventListener('click', () => editRecord(tableRow));
-//   const deleteButton = document.createElement('button');
-//   deleteButton.textContent = 'Delete';
-//   deleteButton.addEventListener('click', () => deleteRecord(tableRow));
-
-//   editTd.appendChild(editButton);
-//   deleteTd.appendChild(deleteButton);
-
-//   tableRow.appendChild(classTd);
-//   tableRow.appendChild(nameTd);
-//   tableRow.appendChild(amountToBePaidTd);
-//   tableRow.appendChild(amountDepositedTd);
-//   tableRow.appendChild(balanceTd);
-//   tableRow.appendChild(editTd);
-//   tableRow.appendChild(deleteTd);
-
-//   tableBody.appendChild(tableRow);
-
-//   form.reset();
-// });
-
-// function editRecord(row) {
-//   const className = row.cells[0].textContent;
-//   const studentName = row.cells[1].textContent;
-//   const amountToBePaid = row.cells[2].textContent;
-//   const amountDeposited = row.cells[3].textContent;
-
-//   document.getElementById('className').value = className;
-//   document.getElementById('studentName').value = studentName;
-//   document.getElementById('amountToBePaid').value = amountToBePaid;
-//   document.getElementById('amountDeposited').value = amountDeposited;
-
-//   row.remove();
-// }
-
-// function deleteRecord(row) {
-//   row.remove();
-// }
-
-
-
 
 const form = document.getElementById('paymentForm');
 const tableBody = document.getElementById('recordstbody');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const className = document.getElementById('className').value;
-
   const studentName = document.getElementById('studentName').value;
   const amountToBePaid = document.getElementById('amountToBePaid').value;
   const amountDeposited = document.getElementById('amountDeposited').value;
   const balance = amountToBePaid - amountDeposited;
-
+ 
+  const token = localStorage.getItem("token");
+  
   fetch('https://skulrecbackendcod.onrender.com/api/records/add', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ className, studentName, amountToBePaid, amountDeposited, balance }),
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ className, studentName, amountToBePaid, amountDeposited,balance }),
   })
-    .then((response) => response.json())
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
     .then((data) => {
       const tableRow = createTableRow(className, studentName, amountToBePaid, amountDeposited, balance, data._id);
-      tableBody.appendChild(tableRow);
-     
+      
+      tableBody.appendChild(tableRow);  
     })
   
     .catch((error) => console.error('Error:', error));
@@ -138,142 +78,89 @@ function createTableRow(className, studentName, amountToBePaid, amountDeposited,
 
 
 
-// function editRecord(id, row) {
-//   const className = row.cells[0].textContent;
-//   const studentName = row.cells[1].textContent;
-//   const amountToBePaid = row.cells[2].textContent;
-//   const amountDeposited = row.cells[3].textContent;
+function editRecord(id, row) {
+  const className = row.cells[0].textContent;
+  const studentName = row.cells[1].textContent;
+  const amountToBePaid = row.cells[2].textContent;
+  const amountDeposited = row.cells[3].textContent;
 
-//   document.getElementById('className').value = className;
-//   document.getElementById('studentName').value = studentName;
-//   document.getElementById('amountToBePaid').value = amountToBePaid;
-//   document.getElementById('amountDeposited').value = amountDeposited;
+  document.getElementById('className').value = className;
+  document.getElementById('studentName').value = studentName;
+  document.getElementById('amountToBePaid').value = amountToBePaid;
+  document.getElementById('amountDeposited').value = amountDeposited;
 
-//   row.remove();
+  row.remove();
+}
+
+function deleteRecord(id, row) {
+  tableBody.remove();
+}
 
   
 
-//   fetch(`http://localhost:3000/api/records/updateRecord/${id}`, {
-//     method: 'PATCH',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({
-//       className,
-//       studentName,
-//       amountToBePaid,
-//       amountDeposited
-//     })
-//   })
-//   .then((response) => response.json())
-  
-//   .then((data) => {
-//     console.log('Record edited successfully:', data);
-//   })
-//   .catch((error) => console.error('Error:', error));
-// }
+const getRecords = async () => {
+  const token = localStorage.getItem('token');
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const userId = payload;
+  console.log(userId);
+  const {id} = userId;
+  const response = await fetch(`https://skulrecbackendcod.onrender.com/api/records/getRecords/${id}`);
+  const records = await response.json();
+  console.log(records);
 
-// function deleteRecord(id, row) {
-//   fetch(`/api/records/${id}`, {
-//     method: 'DELETE'
-//   })
-//   .then((response) => response.json())
-//   .then((data) => {
-//     console.log('Record deleted successfully:', data);
-//     row.remove();
-//   })
-//   .catch((error) => console.error('Error:', error));
-// }
+  if (Array.isArray(records)) {
+    const tableBody = document.getElementById('recordstbody');
+    tableBody.innerHTML = '';
 
-// const getRecords = async () => {
-    
-//     const response = await fetch('http://localhost:3000/api/records/getRecords');
-//     const records = await response.json();
-//     records.forEach((record) => {
-//       const tableRow = document.createElement('tr');
-//       const classTd = document.createElement('td');
-//       const nameTd = document.createElement('td');
-//       const amountToBePaidTd = document.createElement('td');
-//       const amountDepositedTd = document.createElement('td');
-//       const balanceTd = document.createElement('td');
-//       const editTd = document.createElement('td');
-//       const deleteTd = document.createElement('td');
-//       classTd.textContent = record.className;
-//       nameTd.textContent = record.studentName;
-//       amountToBePaidTd.textContent = record.amountToBePaid;
-//       amountDepositedTd.textContent = record.amountDeposited;
-//       balanceTd.textContent = record.balance;
-//       const editButton = document.createElement('button');
-//       editButton.textContent = 'Edit';
-//       editButton.addEventListener('click', () => editRecord(record._id, tableRow));
-//       const deleteButton = document.createElement('button');
-//       deleteButton.textContent = 'Delete';
-//       deleteButton.addEventListener('click', () => deleteRecord(record._id, tableRow));
-//       editTd.appendChild(editButton);
-//       deleteTd.appendChild(deleteButton);
-//       tableRow.appendChild(classTd);
-//       tableRow.appendChild(nameTd);
-//       tableRow.appendChild(amountToBePaidTd);
-//       tableRow.appendChild(amountDepositedTd);
-//       tableRow.appendChild(balanceTd);
-//       tableRow.appendChild(editTd);
-//       tableRow.appendChild(deleteTd);
-//       tableBody.appendChild(tableRow);
-//     });
-   
-//   };
+    records.forEach((record) => {
+      const tableRow = document.createElement('tr');
 
-// const getRecords = async (userId) => {
-//    // Replace with the actual user ID
-// const objectId = mongoose.Types.ObjectId(userId);
-//   // console.log('UserId:', userId); // Check if userId is defined
-//   // console.log('User logged in:', userId ? true : false); // Check if user is logged in
-   
-//    const response = await fetch('http://localhost:3000/api/records/getRecords/${objectId}');
-  
-//   console.log('Records:', response);
-//     const records = await response.json();
-//     console.log('Records:', records);
-//     if (Array.isArray(records)) {
-//     const tableBody = document.getElementById('recordstbody');
-//     tableBody.innerHTML = '';
-//     records.forEach((record) => {
-//       const tableRow = document.createElement('tr');
-//       const classTd = document.createElement('td');
-//       const nameTd = document.createElement('td');
-//       const amountToBePaidTd = document.createElement('td');
-//       const amountDepositedTd = document.createElement('td');
-//       const balanceTd = document.createElement('td');
-//       classTd.textContent = record.className;
-//       nameTd.textContent = record.studentName;
-//       amountToBePaidTd.textContent = record.amountToBePaid;
-//       amountDepositedTd.textContent = record.amountDeposited;
-//       balanceTd.textContent = record.balanceAmount; // display balance in table
-//       const editTd = document.createElement('td');
-//       const deleteTd = document.createElement('td');
-//       const editButton = document.createElement('button');
-//       editButton.textContent = 'Edit';
-//       editButton.addEventListener('click', () => editRecord(record._id, tableRow));
-//       const deleteButton = document.createElement('button');
-//       deleteButton.textContent = 'Delete';
-//       deleteButton.addEventListener('click', () => deleteRecord(record._id, tableRow));
-//       editTd.appendChild(editButton);
-//       deleteTd.appendChild(deleteButton);
-//       tableRow.appendChild(classTd);
-//       tableRow.appendChild(nameTd);
-//       tableRow.appendChild(amountToBePaidTd);
-//       tableRow.appendChild(amountDepositedTd);
-//       tableRow.appendChild(balanceTd);
-//       tableRow.appendChild(editTd);
-//       tableRow.appendChild(deleteTd);
-//       tableBody.appendChild(tableRow);  
+      const classTd = createTableCell(record.className);
+      const nameTd = createTableCell(record.studentName);
+      const amountToBePaidTd = createTableCell(record.amountToBePaid);
+      const amountDepositedTd = createTableCell(record.amountDeposited);
+      const balanceTd = createTableCell(record.balanceAmount);
 
-//     })
-    
-//   }
-//   };
-  
-//   // call the function when the page loads
-//   document.addEventListener('DOMContentLoaded', getRecords);
-//   getRecords();
+      const editTd = createEditCell(record._id, tableRow);
+      const deleteTd = createDeleteCell(record._id, tableRow);
+
+      tableRow.appendChild(classTd);
+      tableRow.appendChild(nameTd);
+      tableRow.appendChild(amountToBePaidTd);
+      tableRow.appendChild(amountDepositedTd);
+      tableRow.appendChild(balanceTd);
+      tableRow.appendChild(editTd);
+      tableRow.appendChild(deleteTd);
+
+      tableBody.appendChild(tableRow);
+    });
+  }
+};
+
+function createTableCell(textContent) {
+  const td = document.createElement('td');
+  td.textContent = textContent;
+  return td;
+}
+
+function createEditCell(recordId, tableRow) {
+  const editTd = document.createElement('td');
+  const editButton = document.createElement('button');
+  editButton.textContent = 'Edit';
+  editButton.addEventListener('click', () => editRecord(recordId, tableRow));
+  editTd.appendChild(editButton);
+  return editTd;
+}
+
+function createDeleteCell(recordId, tableRow) {
+  const deleteTd = document.createElement('td');
+  const deleteButton = document.createElement('button');
+  deleteButton.textContent = 'Delete';
+  deleteButton.addEventListener('click', () => deleteRecord(recordId, tableRow));
+  deleteTd.appendChild(deleteButton);
+  return deleteTd;
+}
+
+document.addEventListener('DOMContentLoaded', getRecords);
+getRecords()
   

@@ -1,73 +1,4 @@
-// if (registerForm) {
-//     registerForm.addEventListener('submit', function(event) {
-//         event.preventDefault();
-//         const username = document.getElementById('registerUsername').value;
-//         const email = document.getElementById('registerEmail').value;
-      
-//         const phone = document.getElementById('registerPhone').value; // Get the phone number value
-//         const password = document.getElementById('registerPassword').value;
 
-//         localStorage.setItem('admin', JSON.stringify({ username, email, phone, password }));
-//                    console.log(localStorage.getItem('admin'))})
-//     }
-
-    // const formData = (document.getElementById('registerForm'));
-    // if (formData) {
-    //     formData.addEventListener('submit', function(event) {
-    //         event.preventDefault();
-    //         const username = document.getElementById('registerUsername').value;
-    //         const email = document.getElementById('registerEmail').value;
-          
-    //         const phone = document.getElementById('registerPhone').value; // Get the phone number value
-    //         const password = document.getElementById('registerPassword').value;
-    
-    //         localStorage.setItem('admin', JSON.stringify({ username, email, phone, password }));
-    //                    console.log(localStorage.getItem('admin'))})
-    //     }
-    // fetch('http://localhost:3000/api/users/register', {
-    //     method: 'POST',
-    //     body: formData
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.success) {
-    //         alert('Registration successful! Please check your email for verification.');
-    //         window.location.href = 'finance.html'; // Redirect to finance records page
-    //     } else {
-    //         alert('Registration failed. Please try again.');
-    //     }
-    // })
-    // .catch(error => {
-    //     console.error('Registration failed:', error);
-    //     alert('Registration failed. Please try again.');
-    // });
-
-        // Generate OTP and send to the provided phone number
-//         generateOTP(phone)
-//             .then(otp => {
-//                 const enteredOTP = prompt('Please enter the OTP sent to your phone number:');
-
-//                 if (enteredOTP === otp) {
-//                     // Save user data after OTP verification is successful
-//                     localStorage.setItem('admin', JSON.stringify({ username, email, phone, password }));
-//                     console.log(localStorage.getItem('admin'))
-
-//                     // Generate a token and save it
-//                     const token = 'admin-token'; // Simplified token generation
-//                     localStorage.setItem('token', token);
-
-//                     alert('Registration successful! Please check your email for verification.');
-//                     window.location.href = 'finance.html'; // Redirect to finance records page
-//                 } else {
-//                     alert('Invalid OTP. Please try again.');
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error('OTP generation failed:', error);
-//                 alert('OTP generation failed. Please try again.');
-//             });
-//     });
-// }
 
 
 const form = document.getElementById('registerForm');
@@ -85,7 +16,7 @@ email: formData.get('registerEmail'),
 phone: formData.get('registerPhone'),
 password: formData.get('registerPassword'),
 };
-console.log(userData)
+
 
 // localStorage.setItem('admin', JSON.stringify(userData));
 // console.log(localStorage.getItem('admin'))
@@ -148,6 +79,8 @@ return response.json();
 .then(data => {
 console.log(data);
 if (data) {
+  const token = data.token; // Assuming the backend returns the token in the response
+        localStorage.setItem('token', token); // Store the token in local storage
 alert('Login successful!');
 window.location.href = 'financialrecords.html';
 } else {
